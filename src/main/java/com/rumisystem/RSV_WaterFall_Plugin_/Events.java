@@ -27,7 +27,7 @@ public class Events implements Listener {
 		try {
 			//全員に参加メッセージを送信
 			for (ProxiedPlayer PLAYER : ProxyServer.getInstance().getPlayers()) {
-				PLAYER.setTabHeader(new TextComponent("これはヘッダー"), new TextComponent("こっちはフッター、タブリストって以外と色々出来る"));
+				//PLAYER.setTabHeader(new TextComponent("これはヘッダー"), new TextComponent("こっちはフッター、タブリストって以外と色々出来る"));
 
 				//チャットメッセージの作成
 				TextComponent CHAT_MESSAGE = new TextComponent(

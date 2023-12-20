@@ -24,7 +24,8 @@ public class Events implements Listener {
 				if (!E.isCommand()) {//コマンドじゃないよ！
 					//チャットを鯖に送らないための処理
 					E.setCancelled(true);
-					////全プレイヤーにチャットを送信
+
+					//全プレイヤーにチャットを送信
 					for (ProxiedPlayer player : ProxyServer.getInstance().getPlayers()) {
 						//チャットメッセージの作成
 						TextComponent CHAT_MESSAGE = new TextComponent(CS.LOADING().getTable("CHAT").getString("TEXT")

@@ -6,6 +6,7 @@ import java.io.FileWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -14,12 +15,14 @@ import com.moandjiezana.toml.Toml;
 
 public class CONFIG_SYSTEM{
 	private static File WORK_DIR;
-	private static Toml CONFIG_DATA;
+	private static HashMap<String, Toml> CONFIG_DATA = new HashMap<>();
+	private static String[] CONFIG_FILES = {"CONFIG", "SERVER_NAME"};
+	private static String[] CONFIG_FILES_DATA;
 
 	/**
 	 * 設定ファイルのチェック
 	 * */
-	public static void CHECK(){
+	public void CHECK(){
 		RSV_WaterFall_Plugin PLUGIN_INSTACE = RSV_WaterFall_Plugin.getInstance();
 		try{
 			//作業フォルダを取得
@@ -33,14 +36,26 @@ public class CONFIG_SYSTEM{
 			//設定ファイルの中身
 			StringBuilder CONFIG_FILE_DATA = new StringBuilder();
 			CONFIG_FILE_DATA.append("#RumiSerVer WaterFall Pluginの設定ファイル！\n");
+			CONFIG_FILE_DATA.append("\n");
 			CONFIG_FILE_DATA.append("#チャットに関する設定\n");
 			CONFIG_FILE_DATA.append("[CHAT]\n");
 			CONFIG_FILE_DATA.append("ENABLE=true #有効無効\n");
 			CONFIG_FILE_DATA.append("TEXT=\"<{USER_NAME}>{TEXT}\" #チャットの文章を変えれます、[]でも何でもどうぞ\n");
+			CONFIG_FILE_DATA.append("\n");
+			CONFIG_FILE_DATA.append("#メッセージ\n");
+			CONFIG_FILE_DATA.append("[MESSAGE]\n");
+			CONFIG_FILE_DATA.append("JOIN=\"{USER_NAME}さんが参加しました\"\n");
+			CONFIG_FILE_DATA.append("LEFT=\"{USER_NAME}さんが退出しました\"\n");
+			CONFIG_FILE_DATA.append("MOVE=\"{USER_NAME}さんが{NEXT_SERVER}へ移動しました\"\n");
+
+			//設定ファイルの中身
+			StringBuilder SERVER_NAME_FILE_DATA = new StringBuilder();
+			SERVER_NAME_FILE_DATA.append("#鯖の名前を設定できるやつ\n");
+			SERVER_NAME_FILE_DATA.append("\n");
+			SERVER_NAME_FILE_DATA.append("#鯖の内部名=置き換え先\n");
 
 			//設定ファイルの一覧
-			String[] CONFIG_FILES = {"CONFIG.toml"};
-			String[] CONFIG_FILES_DATA = {CONFIG_FILE_DATA.toString()};
+			CONFIG_FILES_DATA = new String[]{CONFIG_FILE_DATA.toString(), SERVER_NAME_FILE_DATA.toString()};
 
 			//ファイルチェック
 			for(int I_FILECHECK = 0; I_FILECHECK < CONFIG_FILES.length; I_FILECHECK++){
@@ -75,7 +90,7 @@ public class CONFIG_SYSTEM{
 					}
 				}, 0, 500);
 
-				Path FILE_PATH = Paths.get(WORK_DIR.getPath() + "/" + FILE_NAME);
+				Path FILE_PATH = Paths.get(WORK_DIR.getPath() + "/" + FILE_NAME + ".toml");
 				if(Files.exists(FILE_PATH)){
 					//タイマーを殺す
 					TIMER.cancel();
@@ -108,16 +123,19 @@ public class CONFIG_SYSTEM{
 		}
 	}
 
-	public static Toml LOADING(){
-		if(CONFIG_DATA == null){
-			//Tomlファイルのパスを指定
-			String TOML_FILE_PATH = WORK_DIR + "/CONFIG.toml";
+	public HashMap<String, Toml> LOADING(){
+		RSV_WaterFall_Plugin PLUGIN_INSTACE = RSV_WaterFall_Plugin.getInstance();
+		if(CONFIG_DATA.size() == 0){
+			for(String FILE_NAME:CONFIG_FILES){
+				//Tomlファイルのパスを指定
+				String TOML_FILE_PATH = WORK_DIR + "/" + FILE_NAME + ".toml";
 
-			//Tomlファイルを解析
-			Toml TOML_DATA = new Toml().read(new File(TOML_FILE_PATH));
+				//Tomlファイルを解析
+				Toml TOML_DATA = new Toml().read(new File(TOML_FILE_PATH));
 
-			//解析結果を入れる
-			CONFIG_DATA = TOML_DATA;
+				//解析結果を入れる
+				CONFIG_DATA.put(FILE_NAME, TOML_DATA);
+			}
 
 			return CONFIG_DATA;
 		}else {

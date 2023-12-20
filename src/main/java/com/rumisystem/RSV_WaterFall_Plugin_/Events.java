@@ -3,6 +3,7 @@ package com.rumisystem.RSV_WaterFall_Plugin_;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.ProxyServer;
+import net.md_5.bungee.api.ServerPing;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.ChatEvent;
@@ -11,6 +12,8 @@ import net.md_5.bungee.api.event.PostLoginEvent;
 import net.md_5.bungee.api.event.ServerSwitchEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
+
+import java.util.UUID;
 
 public class Events implements Listener {
 	private CONFIG_SYSTEM CS;
@@ -24,6 +27,8 @@ public class Events implements Listener {
 		try {
 			//全員に参加メッセージを送信
 			for (ProxiedPlayer PLAYER : ProxyServer.getInstance().getPlayers()) {
+				PLAYER.setTabHeader(new TextComponent("これはヘッダー"), new TextComponent("こっちはフッター、タブリストって以外と色々出来る"));
+
 				//チャットメッセージの作成
 				TextComponent CHAT_MESSAGE = new TextComponent(
 						CS.LOADING().get("CONFIG").getString("MESSAGE.JOIN")
@@ -111,6 +116,9 @@ public class Events implements Listener {
 					//チャットを鯖に送らないための処理
 					E.setCancelled(true);
 
+					//プレイヤー
+					ProxiedPlayer SENDER_PLAYER = (ProxiedPlayer) E.getSender();
+
 					//全プレイヤーにチャットを送信
 					for (ProxiedPlayer PLAYER : ProxyServer.getInstance().getPlayers()) {
 						//チャットメッセージの作成
@@ -123,7 +131,7 @@ public class Events implements Listener {
 						CHAT_MESSAGE.setColor(ChatColor.WHITE);
 
 						//プレイヤーにメッセージを送信
-						PLAYER.sendMessage(ChatMessageType.CHAT, CHAT_MESSAGE);
+						PLAYER.sendMessage(SENDER_PLAYER.getUniqueId(), CHAT_MESSAGE);
 					}
 				}
 			}

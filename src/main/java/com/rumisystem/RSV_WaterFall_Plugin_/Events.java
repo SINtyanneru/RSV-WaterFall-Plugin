@@ -17,8 +17,8 @@ import java.util.UUID;
 
 public class Events implements Listener {
 	private CONFIG_SYSTEM CS;
-	public Events(CONFIG_SYSTEM CS_){
-		CS = CS_;
+	public Events(){
+		CS = RSV_WaterFall_Plugin.getInstance().CS;
 	}
 
 	//鯖に参加

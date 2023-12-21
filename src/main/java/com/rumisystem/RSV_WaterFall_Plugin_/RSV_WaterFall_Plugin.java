@@ -4,6 +4,7 @@ import net.md_5.bungee.api.plugin.Plugin;
 
 public final class RSV_WaterFall_Plugin extends Plugin {
 	private static RSV_WaterFall_Plugin INSTANCE;
+	public CONFIG_SYSTEM CS; //外部からクセス出来る設定システムのインスタンス
 
 	@Override
 	public void onEnable() {
@@ -15,11 +16,11 @@ public final class RSV_WaterFall_Plugin extends Plugin {
 		getLogger().info("|V1.0                     |");
 		getLogger().info("+-------------------------+");
 
-		CONFIG_SYSTEM CS = new CONFIG_SYSTEM();
+		CS = new CONFIG_SYSTEM();
 		CS.CHECK();
 		CS.LOADING();
 
-		getProxy().getPluginManager().registerListener(this, new Events(CS));
+		getProxy().getPluginManager().registerListener(this, new Events());
 
 		//有効化？
 		super.onEnable();

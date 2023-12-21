@@ -22,6 +22,16 @@ public final class RSV_WaterFall_Plugin extends Plugin {
 
 		getProxy().getPluginManager().registerListener(this, new Events());
 
+		/*
+			コマンド登録
+		* */
+		//ハブ
+		if(CS.LOADING().get("CONFIG").getBoolean("HUB.ENABLE")){
+			getProxy().getPluginManager().registerCommand(this, new com.rumisystem.RSV_WaterFall_Plugin_.COMMAND.hub());
+		}
+
+
+
 		//有効化？
 		super.onEnable();
 	}
